@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaşıtNet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        html, body { height: 100%; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(120deg, #e0e7ff 0%, #f8fafc 100%);
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .header-area {
+            width: 100%;
+            background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+            padding: 2.5rem 0 2.5rem 0;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 4px 24px 0 rgba(37,99,235,0.07);
+        }
+        .header-title {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 2.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+        }
+        .header-title img {
+            width: 48px;
+            height: 48px;
+        }
+        .header-desc {
+            color: #e0e7ff;
+            font-size: 1.15rem;
+            margin-top: 0.7rem;
+        }
+        .content-area {
+            width: 100%;
+            max-width: 1200px;
+            margin: 3.5rem auto 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3.5rem;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .box {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px 0 rgba(0,0,0,0.07);
+            padding: 2.2rem 2rem 2rem 2rem;
+            flex: 1 1 380px;
+            min-width: 340px;
+            max-width: 540px;
+            margin-bottom: 2rem;
+        }
+        .box-title {
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+        }
+        .btn-custom {
+            background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+            color: #fff;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: background 0.2s;
+        }
+        .btn-custom:hover {
+            background: linear-gradient(90deg, #1d4ed8 0%, #0ea5e9 100%);
+        }
+        #notTransportMessage {
+            color: #ef4444;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .prediction-chart {
+            margin-top: 20px;
+        }
+        .list-group-item {
+            font-size: 1.08rem;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        .table-area { margin-top: 1.5rem; }
+        @media (max-width: 1200px) {
+            .content-area { flex-direction: column; align-items: center; gap: 2rem; }
+        }
+        @media (max-width: 600px) {
+            .header-title { font-size: 1.2rem; }
+            .box { padding: 1rem; min-width: 98vw; }
+            .content-area { margin-top: 1.5rem; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-area">
+        <div class="header-title">
+            <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="AI Icon">
+            TaşıtNet
+        </div>
+        <div class="header-desc">Yapay zeka tabanlı bu uygulama ile yüklediğiniz görüntünün taşıt olup olmadığını ve hangi taşıt türüne ait olduğunu kolayca öğrenebilirsiniz.</div>
+    </div>
+    <div class="content-area">
+        <div class="box">
+            <div class="box-title">Görüntü Yükle ve Sınıflandır</div>
+            <form id="uploadForm" enctype="multipart/form-data" class="mb-4">
+                <div class="mb-3">
+                    <label for="imageFile" class="form-label">Görüntü Seçin</label>
+                    <input type="file" class="form-control" id="imageFile" name="file" accept="image/*" required>
+                </div>
+                <button type="submit" class="btn btn-custom w-100">Sınıflandır</button>
+            </form>
+            <div id="resultContainer" style="display:none;">
+                <div class="box-title" style="font-size:1.1rem;">Sonuç</div>
+                <div id="predictionResult"></div>
+                <div id="confidenceScore"></div>
+                <div id="notTransportMessage"></div>
+                <canvas id="predictionChart" class="prediction-chart"></canvas>
+            </div>
+        </div>
+        <div class="box table-area">
+            <div class="box-title">Desteklenen Sınıflar</div>
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>İngilizce</th>
+                        <th>Türkçe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>airplane</td><td>uçak</td></tr>
+                    <tr><td>automobile</td><td>otomobil</td></tr>
+                    <tr><td>ship</td><td>gemi</td></tr>
+                    <tr><td>truck</td><td>kamyon</td></tr>
+                </tbody>
+            </table>
+            <div class="mt-2 text-muted" style="font-size:0.97rem;">Yalnızca bu dört taşıt sınıfı için doğru sonuç alınır. Diğer sınıflar için "Bu bir taşıt değildir." uyarısı gösterilir.</div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let predictionChartInstance = null;
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('imageFile');
+            if(!fileInput.files[0]) {
+                alert('Lütfen bir görüntü seçin.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById('resultContainer').style.display = 'block';
+                document.getElementById('notTransportMessage').innerHTML = '';
+                document.getElementById('predictionResult').innerHTML = '';
+                document.getElementById('confidenceScore').innerHTML = '';
+                if (predictionChartInstance) {
+                    predictionChartInstance.destroy();
+                }
+                document.getElementById('predictionChart').style.display = 'none';
+                if (result.message) {
+                    document.getElementById('notTransportMessage').innerHTML = result.message;
+                } else {
+                    document.getElementById('predictionResult').innerHTML = `<strong>Tahmin:</strong> ${result.class}`;
+                    document.getElementById('confidenceScore').innerHTML = `<strong>Güven:</strong> ${(result.confidence * 100).toFixed(2)}%`;
+                    document.getElementById('predictionChart').style.display = 'block';
+                    const ctx = document.getElementById('predictionChart').getContext('2d');
+                    const transportLabels = ['airplane', 'automobile', 'ship', 'truck'];
+                    const transportIndexes = [0, 1, 8, 9];
+                    const transportProbs = transportIndexes.map(i => result.all_predictions[i]);
+                    predictionChartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: transportLabels,
+                            datasets: [{
+                                label: 'Taşıt Sınıf Olasılıkları',
+                                data: transportProbs,
+                                backgroundColor: [
+                                    'rgba(59, 130, 246, 0.7)',
+                                    'rgba(16, 185, 129, 0.7)',
+                                    'rgba(251, 191, 36, 0.7)',
+                                    'rgba(239, 68, 68, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(59, 130, 246, 1)',
+                                    'rgba(16, 185, 129, 1)',
+                                    'rgba(251, 191, 36, 1)',
+                                    'rgba(239, 68, 68, 1)'
+                                ],
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 1
+                                }
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                alert('Bir hata oluştu: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html> 

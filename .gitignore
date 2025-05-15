@@ -1,0 +1,31 @@
+# Python cache klasörleri
+__pycache__/
+*.py[cod]
+
+# Sanal ortam klasörleri
+venv/
+.env/
+
+# Model, kütüphane ve büyük dosyalar
+*.pth
+*.h5
+*.dll
+*.lib
+*.pyd
+*.so
+
+# Veri setleri ve arşiv dosyaları
+*.tar.gz
+*.zip
+*.rar
+data/
+datasets/
+
+# IDE klasörleri
+.vscode/
+.idea/
+
+# Diğer gereksiz dosyalar
+.DS_Store
+*.log
+
