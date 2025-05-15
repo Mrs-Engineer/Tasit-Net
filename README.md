@@ -104,6 +104,3 @@ Bu proje, taşıt (uçak, otomobil, gemi, kamyon) görüntülerinin yapay zeka (
 - Model sadece taşıt sınıfları için güvenilir sonuç verir.
 - Diğer CIFAR-10 sınıfları için "Bu bir taşıt değildir." uyarısı çıkar.
 - Görsellerin net ve aydınlık olması önerilir.
-
-## Lisans
-Bu proje eğitim ve ödev amaçlıdır. 
